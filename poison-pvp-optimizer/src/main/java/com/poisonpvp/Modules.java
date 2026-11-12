@@ -1,7 +1,7 @@
 package com.poisonpvp;
 
 import net.minecraft.client.CloudStatus;
-import net.minecraft.client.GraphicsStatus;
+import net.minecraft.client.GraphicsPreset;
 import net.minecraft.server.level.ParticleStatus;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public final class Modules {
         new Module("hurttilt", "Hasar Eğimi Kapat", (o, u) -> Module.set(u, o.damageTiltStrength(), 0.0D)),
         new Module("brightness", "Max Parlaklık", (o, u) -> Module.set(u, o.gamma(), 1.0D)),
         new Module("clouds", "Bulut Kapat", (o, u) -> Module.set(u, o.cloudStatus(), CloudStatus.OFF)),
-        new Module("fastgfx", "Fast Grafik", (o, u) -> Module.set(u, o.graphicsMode(), GraphicsStatus.FAST)),
+        new Module("fastgfx", "Fast Grafik", (o, u) -> Module.set(u, o.graphicsPreset(), GraphicsPreset.FAST)),
         new Module("mipmap", "Mipmap 0", (o, u) -> Module.set(u, o.mipmapLevels(), 0)),
         new Module("screenfx", "Ekran Efekti Kapat", (o, u) -> Module.set(u, o.screenEffectScale(), 0.0D)),
         new Module("autosave", "Autosave Gizle", (o, u) -> Module.set(u, o.showAutosaveIndicator(), false)),
