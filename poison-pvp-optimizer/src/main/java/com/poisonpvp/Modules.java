@@ -5,6 +5,7 @@ import net.minecraft.client.GraphicsPreset;
 import net.minecraft.server.level.ParticleStatus;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public final class Modules {
@@ -15,7 +16,7 @@ public final class Modules {
         "DiaSMP", "Sword", "Axe", "Cart", "Spear"
     );
 
-    // PvP profiles only adjust visuals and graphics performance.
+    // These are client-side visual/graphics settings only.
     public static final List<Module> ALL = List.of(
         new Module("particles", "Parçacık Min.", (o, u) -> Module.set(u, o.particles(), ParticleStatus.MINIMAL)),
         new Module("shadows", "Gölge Kapat", (o, u) -> Module.set(u, o.entityShadows(), false)),
@@ -37,15 +38,35 @@ public final class Modules {
         new Module("togglesprint", "Toggle Sprint", (o, u) -> Module.set(u, o.toggleSprint(), true))
     );
 
+    // Each profile selects a different combination of visual and graphics options.
+    // No profile changes combat mechanics or input timing.
+    private static final Map<String, Set<String>> PROFILE_PRESETS = Map.ofEntries(
+        Map.entry("SMP", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "autosave")),
+        Map.entry("UHC", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx")),
+        Map.entry("Crystal", Set.of("particles", "shadows", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx")),
+        Map.entry("Mace", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "screenfx")),
+        Map.entry("DiaPot", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx")),
+        Map.entry("NetPot", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "screenfx")),
+        Map.entry("DiaSMP", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "autosave")),
+        Map.entry("Sword", Set.of("particles", "shadows", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx")),
+        Map.entry("Axe", Set.of("particles", "shadows", "simdist", "entitydist", "clouds", "fastgfx", "screenfx")),
+        Map.entry("Cart", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx")),
+        Map.entry("Spear", Set.of("particles", "shadows", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx"))
+    );
+
     public static final Set<String> PRESET_MAX_FPS = Set.of(
         "particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend",
         "clouds", "fastgfx", "mipmap", "screenfx", "autosave"
     );
 
-    // No FPS cap, VSync, camera or gameplay-mechanic changes in PvP profiles.
     public static final Set<String> PRESET_PVP = Set.of(
-        "particles", "shadows", "clouds", "fastgfx", "mipmap", "screenfx"
+        "particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend",
+        "clouds", "fastgfx", "mipmap", "screenfx", "autosave"
     );
+
+    public static Set<String> profilePreset(String profile) {
+        return PROFILE_PRESETS.getOrDefault(profile, PROFILE_PRESETS.get("SMP"));
+    }
 
     public static void applyPreset(Set<String> ids) {
         for (Module m : ALL) m.setEnabled(ids.contains(m.id), false);
