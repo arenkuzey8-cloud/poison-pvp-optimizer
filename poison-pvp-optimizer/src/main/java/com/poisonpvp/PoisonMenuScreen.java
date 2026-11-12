@@ -20,7 +20,7 @@ public class PoisonMenuScreen extends Screen {
     private final Map<Module, Button> moduleButtons = new LinkedHashMap<>();
 
     public PoisonMenuScreen() {
-        super(Component.literal("Poison Client"));
+        super(Component.literal("Poison PvP"));
     }
 
     @Override
@@ -30,27 +30,27 @@ public class PoisonMenuScreen extends Screen {
         int y = Math.max(8, this.height / 2 - 145);
 
         Button title = Button.builder(
-            Component.literal("POISON CLIENT").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
+            Component.literal("POISON PVP").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
             b -> {}).bounds(cx - 180, y, 360, 24).build();
         title.active = false;
         this.addRenderableWidget(title);
 
         y += 29;
         Button subtitle = Button.builder(
-            Component.literal("Görünüm ve performans ayarları").withStyle(ChatFormatting.GRAY),
+            Component.literal("PvP için görünürlük ve performans ayarları").withStyle(ChatFormatting.GRAY),
             b -> {}).bounds(cx - 180, y, 360, 20).build();
         subtitle.active = false;
         this.addRenderableWidget(subtitle);
 
         y += 25;
-        this.addRenderableWidget(Button.builder(Component.literal("Maks FPS"), b -> {
-            Modules.applyPreset(Modules.PRESET_MAX_FPS);
+        this.addRenderableWidget(Button.builder(Component.literal("PvP Profili"), b -> {
+            Modules.applyPreset(Modules.PRESET_PVP);
             refresh();
         }).bounds(cx - 180, y, 114, 22).build());
-        this.addRenderableWidget(Button.builder(Component.literal("Görsel Mod"), b -> {
+        this.addRenderableWidget(Button.builder(Component.literal("Sade Görünüm"), b -> {
             Modules.applyPreset(Set.of(
                 "particles", "shadows", "bobbing", "fovfx", "hurttilt",
-                "clouds", "screenfx", "autosave"));
+                "clouds", "screenfx"));
             refresh();
         }).bounds(cx - 57, y, 114, 22).build());
         this.addRenderableWidget(Button.builder(Component.literal("Hepsini Kapat"), b -> {
@@ -71,7 +71,7 @@ public class PoisonMenuScreen extends Screen {
 
         y += 29;
         Button section = Button.builder(
-            Component.literal("MODÜLLER  ·  Aç / Kapat").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
+            Component.literal("PVP AYARLARI  ·  Aç / Kapat").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
             b -> {}).bounds(cx - 180, y, 360, 20).build();
         section.active = false;
         this.addRenderableWidget(section);
@@ -79,6 +79,7 @@ public class PoisonMenuScreen extends Screen {
         y += 24;
         int i = 0;
         for (Module m : Modules.ALL) {
+            if (!Modules.PRESET_PVP.contains(m.id)) continue;
             int col = i % 3;
             int row = i / 3;
             Button btn = Button.builder(Component.empty(), b -> {
@@ -89,7 +90,7 @@ public class PoisonMenuScreen extends Screen {
             i++;
         }
 
-        int rows = (Modules.ALL.size() + 2) / 3;
+        int rows = (i + 2) / 3;
         y += rows * 25 + 8;
 
         Button close = Button.builder(Component.literal("Kapat"), b -> this.onClose())
