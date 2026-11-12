@@ -3,7 +3,7 @@
   "id": "poisonpvp",
   "version": "${version}",
   "name": "Poison PVP Optimizer",
-  "description": "Sodium ile calisan PvP odakli FPS ve ayar menusu. Sag Shift ile ac.",
+  "description": "Sodium ile calisan istemci tarafi FPS ve goruntu ayarlari menusu. Sag Shift ile ac.",
   "authors": ["Poison"],
   "environment": "client",
   "entrypoints": {
@@ -22,6 +22,7 @@
     "immediatelyfast": "*",
     "entityculling": "*",
     "moreculling": "*",
-    "modernfix": "*"
+    "modernfix": "*",
+    "c2me": "*"
   }
 }
