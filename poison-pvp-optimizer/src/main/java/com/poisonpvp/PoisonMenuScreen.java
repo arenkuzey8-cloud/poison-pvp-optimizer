@@ -1,6 +1,7 @@
 package com.poisonpvp;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -10,7 +11,6 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class PoisonMenuScreen extends Screen {
 
@@ -19,6 +19,7 @@ public class PoisonMenuScreen extends Screen {
     private Button profileButton;
     private int selectedProfile;
     private Button fovButton;
+    private Button c2meStatusButton;
     private final Map<Module, Button> moduleButtons = new LinkedHashMap<>();
 
     public PoisonMenuScreen() {
@@ -39,7 +40,7 @@ public class PoisonMenuScreen extends Screen {
 
         y += 29;
         Button subtitle = Button.builder(
-            Component.literal("PvP için görünürlük ve performans ayarları").withStyle(ChatFormatting.GRAY),
+            Component.literal("Görsel ayarlar ve istemci performansı").withStyle(ChatFormatting.GRAY),
             b -> {}).bounds(cx - 180, y, 360, 20).build();
         subtitle.active = false;
         this.addRenderableWidget(subtitle);
@@ -50,11 +51,11 @@ public class PoisonMenuScreen extends Screen {
             refresh();
         }).bounds(cx - 180, y, 114, 22).build());
         this.addRenderableWidget(Button.builder(Component.literal("Profili Uygula"), b -> {
-            Modules.applyPreset(Modules.PRESET_PVP);
+            Modules.applyPreset(Modules.profilePreset(Modules.PVP_PROFILES.get(selectedProfile)));
             refresh();
         }).bounds(cx - 57, y, 114, 22).build());
         this.addRenderableWidget(Button.builder(Component.literal("Hepsini Kapat"), b -> {
-            Modules.applyPreset(Set.of());
+            Modules.applyPreset(java.util.Set.of());
             refresh();
         }).bounds(cx + 66, y, 114, 22).build());
 
@@ -71,7 +72,7 @@ public class PoisonMenuScreen extends Screen {
 
         y += 29;
         Button section = Button.builder(
-            Component.literal("PVP AYARLARI  ·  Aç / Kapat").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
+            Component.literal("GÖRSEL / FPS AYARLARI  ·  Aç / Kapat").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
             b -> {}).bounds(cx - 180, y, 360, 20).build();
         section.active = false;
         this.addRenderableWidget(section);
@@ -91,8 +92,14 @@ public class PoisonMenuScreen extends Screen {
         }
 
         int rows = (i + 2) / 3;
-        y += rows * 25 + 8;
+        y += rows * 25 + 5;
+        boolean c2meLoaded = FabricLoader.getInstance().isModLoaded("c2me");
+        c2meStatusButton = this.addRenderableWidget(Button.builder(
+            Component.literal(c2meLoaded ? "C2ME algılandı · Ayarları c2me.toml dosyasında" : "C2ME bulunamadı · İsteğe bağlı mod"),
+            b -> {}).bounds(cx - 180, y, 360, 20).build());
+        c2meStatusButton.active = false;
 
+        y += 25;
         Button close = Button.builder(Component.literal("Kapat"), b -> this.onClose())
             .bounds(cx - 55, y, 110, 22).build();
         this.addRenderableWidget(close);
