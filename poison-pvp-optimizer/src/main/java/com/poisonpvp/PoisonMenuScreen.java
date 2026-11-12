@@ -10,6 +10,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class PoisonMenuScreen extends Screen {
 
@@ -19,45 +20,61 @@ public class PoisonMenuScreen extends Screen {
     private final Map<Module, Button> moduleButtons = new LinkedHashMap<>();
 
     public PoisonMenuScreen() {
-        super(Component.literal("Poison PVP Optimizer"));
+        super(Component.literal("Poison Client"));
     }
 
     @Override
     protected void init() {
         moduleButtons.clear();
         int cx = this.width / 2;
-        int y = Math.max(8, this.height / 2 - 105);
+        int y = Math.max(8, this.height / 2 - 145);
 
         Button title = Button.builder(
-            Component.literal("Poison PVP Optimizer").withStyle(ChatFormatting.DARK_PURPLE, ChatFormatting.BOLD),
-            b -> {}).bounds(cx - 170, y, 340, 20).build();
+            Component.literal("POISON CLIENT").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
+            b -> {}).bounds(cx - 180, y, 360, 24).build();
         title.active = false;
         this.addRenderableWidget(title);
 
-        y += 24;
+        y += 29;
+        Button subtitle = Button.builder(
+            Component.literal("Görünüm ve performans ayarları").withStyle(ChatFormatting.GRAY),
+            b -> {}).bounds(cx - 180, y, 360, 20).build();
+        subtitle.active = false;
+        this.addRenderableWidget(subtitle);
+
+        y += 25;
         this.addRenderableWidget(Button.builder(Component.literal("Maks FPS"), b -> {
             Modules.applyPreset(Modules.PRESET_MAX_FPS);
             refresh();
-        }).bounds(cx - 170, y, 110, 20).build());
-        this.addRenderableWidget(Button.builder(Component.literal("PvP Modu"), b -> {
-            Modules.applyPreset(Modules.PRESET_PVP);
+        }).bounds(cx - 180, y, 114, 22).build());
+        this.addRenderableWidget(Button.builder(Component.literal("Görsel Mod"), b -> {
+            Modules.applyPreset(Set.of(
+                "particles", "shadows", "bobbing", "fovfx", "hurttilt",
+                "clouds", "screenfx", "autosave"));
             refresh();
-        }).bounds(cx - 55, y, 110, 20).build());
+        }).bounds(cx - 57, y, 114, 22).build());
         this.addRenderableWidget(Button.builder(Component.literal("Hepsini Kapat"), b -> {
-            Modules.applyPreset(java.util.Set.of());
+            Modules.applyPreset(Set.of());
             refresh();
-        }).bounds(cx + 60, y, 110, 20).build());
+        }).bounds(cx + 66, y, 114, 22).build());
 
-        y += 24;
+        y += 27;
         zoomButton = this.addRenderableWidget(Button.builder(Component.empty(), b -> {
             binding = true;
             refresh();
-        }).bounds(cx - 170, y, 230, 20).build());
+        }).bounds(cx - 180, y, 245, 22).build());
         fovButton = this.addRenderableWidget(Button.builder(Component.empty(), b -> {
-            Config.zoomFov = Config.zoomFov >= 50 ? 30 : Config.zoomFov + 10;
+            Config.zoomFov = Config.zoomFov >= 110 ? 30 : Math.min(110, Config.zoomFov + 10);
             Config.save();
             refresh();
-        }).bounds(cx + 65, y, 105, 20).build());
+        }).bounds(cx + 71, y, 109, 22).build());
+
+        y += 29;
+        Button section = Button.builder(
+            Component.literal("MODÜLLER  ·  Aç / Kapat").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
+            b -> {}).bounds(cx - 180, y, 360, 20).build();
+        section.active = false;
+        this.addRenderableWidget(section);
 
         y += 24;
         int i = 0;
@@ -67,15 +84,17 @@ public class PoisonMenuScreen extends Screen {
             Button btn = Button.builder(Component.empty(), b -> {
                 m.setEnabled(!m.isEnabled());
                 refresh();
-            }).bounds(cx - 170 + col * 115, y + row * 22, 110, 20).build();
+            }).bounds(cx - 180 + col * 123, y + row * 25, 117, 22).build();
             moduleButtons.put(m, this.addRenderableWidget(btn));
             i++;
         }
-        int rows = (Modules.ALL.size() + 2) / 3;
-        y += rows * 22 + 6;
 
-        this.addRenderableWidget(Button.builder(Component.literal("Kapat"), b -> this.onClose())
-            .bounds(cx - 50, y, 100, 20).build());
+        int rows = (Modules.ALL.size() + 2) / 3;
+        y += rows * 25 + 8;
+
+        Button close = Button.builder(Component.literal("Kapat"), b -> this.onClose())
+            .bounds(cx - 55, y, 110, 22).build();
+        this.addRenderableWidget(close);
 
         refresh();
     }
@@ -92,7 +111,7 @@ public class PoisonMenuScreen extends Screen {
         } else {
             zoomButton.setMessage(Component.literal("Zoom Tuşu: ")
                 .append(PoisonPvpClient.ZOOM_KEY.getTranslatedKeyMessage())
-                .append(Component.literal("  [tıkla]")));
+                .append(Component.literal("  ·  Değiştir")));
         }
         fovButton.setMessage(Component.literal("Zoom FOV: " + Config.zoomFov));
     }
@@ -117,7 +136,7 @@ public class PoisonMenuScreen extends Screen {
         return super.keyPressed(event);
     }
 
-    // Menu acikken oyun durmasin (PvP icin).
+    @Override
     public boolean isPauseScreen() {
         return false;
     }
