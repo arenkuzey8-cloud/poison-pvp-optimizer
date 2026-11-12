@@ -10,6 +10,12 @@ import java.util.Set;
 public final class Modules {
     private Modules() {}
 
+    public static final List<String> PVP_PROFILES = List.of(
+        "SMP", "UHC", "Crystal", "Mace", "DiaPot", "NetPot",
+        "DiaSMP", "Sword", "Axe", "Cart", "Spear"
+    );
+
+    // PvP profiles only adjust visuals and graphics performance.
     public static final List<Module> ALL = List.of(
         new Module("particles", "Parçacık Min.", (o, u) -> Module.set(u, o.particles(), ParticleStatus.MINIMAL)),
         new Module("shadows", "Gölge Kapat", (o, u) -> Module.set(u, o.entityShadows(), false)),
@@ -17,7 +23,7 @@ public final class Modules {
         new Module("simdist", "Simulation 5", (o, u) -> Module.set(u, o.simulationDistance(), 5)),
         new Module("entitydist", "Entity %75", (o, u) -> Module.set(u, o.entityDistanceScaling(), 0.75D)),
         new Module("biomeblend", "Biome Blend 1", (o, u) -> Module.set(u, o.biomeBlendRadius(), 1)),
-        new Module("unlimitedfps", "Sınırsız FPS", (o, u) -> Module.set(u, o.framerateLimit(), 260)),
+        new Module("unlimitedfps", "FPS Limiti 260", (o, u) -> Module.set(u, o.framerateLimit(), 260)),
         new Module("vsync", "VSync Kapat", (o, u) -> Module.set(u, o.enableVsync(), false)),
         new Module("bobbing", "Bobbing Kapat", (o, u) -> Module.set(u, o.bobView(), false)),
         new Module("fovfx", "FOV Efekti Kapat", (o, u) -> Module.set(u, o.fovEffectScale(), 0.0D)),
@@ -32,12 +38,14 @@ public final class Modules {
     );
 
     public static final Set<String> PRESET_MAX_FPS = Set.of(
-        "particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "unlimitedfps", "vsync",
-        "clouds", "fastgfx", "mipmap", "screenfx", "autosave");
+        "particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend",
+        "clouds", "fastgfx", "mipmap", "screenfx", "autosave"
+    );
 
+    // No FPS cap, VSync, camera or gameplay-mechanic changes in PvP profiles.
     public static final Set<String> PRESET_PVP = Set.of(
-        "particles", "shadows", "unlimitedfps", "vsync", "bobbing", "fovfx", "hurttilt", "brightness",
-        "clouds", "screenfx");
+        "particles", "shadows", "clouds", "fastgfx", "mipmap", "screenfx"
+    );
 
     public static void applyPreset(Set<String> ids) {
         for (Module m : ALL) m.setEnabled(ids.contains(m.id), false);
