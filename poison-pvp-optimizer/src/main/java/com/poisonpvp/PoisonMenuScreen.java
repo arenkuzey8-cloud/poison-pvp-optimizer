@@ -16,6 +16,8 @@ public class PoisonMenuScreen extends Screen {
 
     private boolean binding;
     private Button zoomButton;
+    private Button profileButton;
+    private int selectedProfile;
     private Button fovButton;
     private final Map<Module, Button> moduleButtons = new LinkedHashMap<>();
 
@@ -43,14 +45,12 @@ public class PoisonMenuScreen extends Screen {
         this.addRenderableWidget(subtitle);
 
         y += 25;
-        this.addRenderableWidget(Button.builder(Component.literal("PvP Profili"), b -> {
-            Modules.applyPreset(Modules.PRESET_PVP);
+        profileButton = this.addRenderableWidget(Button.builder(Component.empty(), b -> {
+            selectedProfile = (selectedProfile + 1) % Modules.PVP_PROFILES.size();
             refresh();
         }).bounds(cx - 180, y, 114, 22).build());
-        this.addRenderableWidget(Button.builder(Component.literal("Sade Görünüm"), b -> {
-            Modules.applyPreset(Set.of(
-                "particles", "shadows", "bobbing", "fovfx", "hurttilt",
-                "clouds", "screenfx"));
+        this.addRenderableWidget(Button.builder(Component.literal("Profili Uygula"), b -> {
+            Modules.applyPreset(Modules.PRESET_PVP);
             refresh();
         }).bounds(cx - 57, y, 114, 22).build());
         this.addRenderableWidget(Button.builder(Component.literal("Hepsini Kapat"), b -> {
@@ -101,6 +101,7 @@ public class PoisonMenuScreen extends Screen {
     }
 
     private void refresh() {
+        profileButton.setMessage(Component.literal("Tür: " + Modules.PVP_PROFILES.get(selectedProfile)));
         for (Map.Entry<Module, Button> e : moduleButtons.entrySet()) {
             Module m = e.getKey();
             e.getValue().setMessage(Component.literal(m.label)
