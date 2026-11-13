@@ -51,7 +51,26 @@ public final class Modules {
         new Module("screenfx", "Ekran Efektlerini Kapat",
             (o, u) -> Module.set(u, o.screenEffectScale(), 0.0D)),
         new Module("autosave", "Autosave Göstergesini Kapat",
-            (o, u) -> Module.set(u, o.showAutosaveIndicator(), false))
+            (o, u) -> Module.set(u, o.showAutosaveIndicator(), false)),
+        // Safe Crystal-only visual/performance bundle inspired by the uploaded mod's context.
+        // It does not import its crystal attack, placement, timing, or entity-manipulation logic.
+        new Module("crystalvisual", "Crystal Görsel FPS Paketi",
+            (o, u) -> {
+                Module.set(u, o.particles(), ParticleStatus.MINIMAL);
+                Module.set(u, o.entityShadows(), false);
+                Module.set(u, o.renderDistance(), 6);
+                Module.set(u, o.simulationDistance(), 4);
+                Module.set(u, o.entityDistanceScaling(), 0.50D);
+                Module.set(u, o.biomeBlendRadius(), 0);
+                Module.set(u, o.cloudStatus(), CloudStatus.OFF);
+                Module.set(u, o.graphicsPreset(), GraphicsPreset.FAST);
+                Module.set(u, o.mipmapLevels(), 0);
+                Module.set(u, o.screenEffectScale(), 0.0D);
+                Module.set(u, o.fovEffectScale(), 0.0D);
+                Module.set(u, o.damageTiltStrength(), 0.0D);
+                Module.set(u, o.bobView(), false);
+                Module.set(u, o.enableVsync(), false);
+            })
     );
 
     // Distinct mode presets. Differences are visual/performance settings only.
@@ -65,7 +84,7 @@ public final class Modules {
         Map.entry("Pot", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt", "vsync")),
         Map.entry("SMP", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "autosave")),
         Map.entry("DiaSMP", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "autosave")),
-        Map.entry("Crystal", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt", "bobbing", "vsync")),
+        Map.entry("Crystal", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt", "bobbing", "vsync", "crystalvisual")),
         Map.entry("Cart", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt", "bobbing", "vsync"))
     );
 
