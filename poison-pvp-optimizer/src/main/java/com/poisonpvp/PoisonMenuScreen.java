@@ -46,8 +46,8 @@ public class PoisonMenuScreen extends Screen {
         int cellWidth = (innerWidth - (columns - 1) * gap) / columns;
         int rows = (Modules.ALL.size() + columns - 1) / columns;
 
-        int contentHeight = 24 + 4 + 19 + 7 + 24 + 5 + 24 + 7 + 20 + 5
-            + rows * 25 + 7 + 20 + 7 + 22;
+        int contentHeight = 24 + 28 + 19 + 26 + 24 + 29 + 24 + 30 + 20 + 25
+            + rows * 25 + 7 + 20 + 27 + 22;
         int y = Math.max(8, (this.height - contentHeight) / 2);
         panelTop = y - 8;
         panelLeft = left;
