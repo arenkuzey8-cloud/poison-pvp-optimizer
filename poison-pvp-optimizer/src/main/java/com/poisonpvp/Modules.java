@@ -12,8 +12,8 @@ public final class Modules {
     private Modules() {}
 
     public static final List<String> PVP_PROFILES = List.of(
-        "SMP", "UHC", "Crystal", "Mace", "DiaPot", "NetPot",
-        "DiaSMP", "Sword", "Axe", "Cart", "Spear"
+        "Sword", "Axe", "Mace", "Spear", "UHC", "NetPot",
+        "Pot", "SMP", "DiaSMP", "Crystal", "Cart"
     );
 
     // Client-side visual/performance settings only. No combat or item-use automation.
@@ -56,17 +56,17 @@ public final class Modules {
 
     // Distinct mode presets. Differences are visual/performance settings only.
     private static final Map<String, Set<String>> PROFILE_PRESETS = Map.ofEntries(
-        Map.entry("SMP", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "autosave")),
-        Map.entry("UHC", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "bobbing")),
-        Map.entry("Crystal", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt", "bobbing", "vsync")),
-        Map.entry("Mace", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "bobbing", "vsync")),
-        Map.entry("DiaPot", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt", "vsync")),
-        Map.entry("NetPot", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt")),
-        Map.entry("DiaSMP", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "autosave")),
         Map.entry("Sword", Set.of("particles", "shadows", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "bobbing", "vsync")),
         Map.entry("Axe", Set.of("particles", "shadows", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt", "bobbing")),
-        Map.entry("Cart", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt", "bobbing", "vsync")),
-        Map.entry("Spear", Set.of("particles", "shadows", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "bobbing"))
+        Map.entry("Mace", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "bobbing", "vsync")),
+        Map.entry("Spear", Set.of("particles", "shadows", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "bobbing")),
+        Map.entry("UHC", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "bobbing")),
+        Map.entry("NetPot", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt")),
+        Map.entry("Pot", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt", "vsync")),
+        Map.entry("SMP", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "autosave")),
+        Map.entry("DiaSMP", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "autosave")),
+        Map.entry("Crystal", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "biomeblend", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt", "bobbing", "vsync")),
+        Map.entry("Cart", Set.of("particles", "shadows", "renderdist", "simdist", "entitydist", "clouds", "fastgfx", "mipmap", "screenfx", "fovfx", "hurttilt", "bobbing", "vsync"))
     );
 
     // A one-click graphics/performance preset. No artificial FPS cap is applied.
