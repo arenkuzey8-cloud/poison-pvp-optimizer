@@ -158,8 +158,6 @@ public class PoisonMenuScreen extends Screen {
         if (profileButton != null) {
             graphics.renderItem(profileIcon(), profileButton.getX() + 7, profileButton.getY() + 4);
         }
-        graphics.drawString(this.font, "POISON PVP  •  CLIENT SETTINGS",
-            panelLeft + 18, panelTop + 9, 0xFFE8D9FF, false);
         graphics.drawString(this.font, "PROFİL", panelLeft + 18, panelTop + 68, MUTED, false);
         graphics.drawString(this.font, "AYARLAR", panelLeft + 18, panelTop + 164, MUTED, false);
     }
