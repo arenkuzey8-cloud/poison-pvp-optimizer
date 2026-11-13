@@ -31,6 +31,9 @@ public class PoisonMenuScreen extends Screen {
     private Button profileButton;
     private Button zoomButton;
     private Button fovButton;
+    private Button armorHudButton;
+    private Button armorXButton;
+    private Button armorYButton;
     private Button sectionButton;
     private final Button[] tabButtons = new Button[3];
     private final Map<Module, Button> moduleButtons = new LinkedHashMap<>();
@@ -128,7 +131,7 @@ public class PoisonMenuScreen extends Screen {
             index++;
         }
 
-        int bottomY = top + height - 76;
+        int bottomY = top + height - 100;
         zoomButton = addRenderableWidget(Button.builder(Component.empty(), b -> {
             binding = true;
             refresh();
@@ -139,11 +142,39 @@ public class PoisonMenuScreen extends Screen {
             refresh();
         }).bounds(mainX + mainWidth - 88, bottomY, 88, 21).build());
 
+        int hudGap = 4;
+        int hudCell = (mainWidth - hudGap * 4) / 5;
+        armorHudButton = addRenderableWidget(Button.builder(Component.empty(), b -> {
+            Config.armorHudEnabled = !Config.armorHudEnabled;
+            Config.save();
+            refresh();
+        }).bounds(mainX, bottomY + 25, hudCell, 21).build());
+        armorXButton = addRenderableWidget(Button.builder(Component.empty(), b -> {
+            Config.armorHudX = Math.max(0, Config.armorHudX - 10);
+            Config.save();
+            refresh();
+        }).bounds(mainX + hudCell + hudGap, bottomY + 25, hudCell, 21).build());
+        addRenderableWidget(Button.builder(Component.literal("X+"), b -> {
+            Config.armorHudX = Math.min(2000, Config.armorHudX + 10);
+            Config.save();
+            refresh();
+        }).bounds(mainX + (hudCell + hudGap) * 2, bottomY + 25, hudCell, 21).build());
+        armorYButton = addRenderableWidget(Button.builder(Component.empty(), b -> {
+            Config.armorHudY = Math.max(0, Config.armorHudY - 10);
+            Config.save();
+            refresh();
+        }).bounds(mainX + (hudCell + hudGap) * 3, bottomY + 25, hudCell, 21).build());
+        addRenderableWidget(Button.builder(Component.literal("Y+"), b -> {
+            Config.armorHudY = Math.min(2000, Config.armorHudY + 10);
+            Config.save();
+            refresh();
+        }).bounds(mainX + (hudCell + hudGap) * 4, bottomY + 25, hudCell, 21).build());
+
         boolean c2meLoaded = FabricLoader.getInstance().isModLoaded("c2me");
         Button status = addRenderableWidget(Button.builder(
             Component.literal(c2meLoaded ? "C2ME  •  ALGILANDI" : "C2ME  •  İSTEĞE BAĞLI")
                 .withStyle(ChatFormatting.GRAY), b -> {})
-            .bounds(mainX, bottomY + 25, mainWidth, 18).build());
+            .bounds(mainX, bottomY + 50, mainWidth, 18).build());
         status.active = false;
 
         addRenderableWidget(Button.builder(
@@ -200,6 +231,11 @@ public class PoisonMenuScreen extends Screen {
         }
         fovButton.setMessage(Component.literal("FOV " + Config.zoomFov)
             .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
+        if (armorHudButton != null) armorHudButton.setMessage(Component.literal(
+            "HUD " + (Config.armorHudEnabled ? "AÇIK" : "KAPALI"))
+            .withStyle(Config.armorHudEnabled ? ChatFormatting.GREEN : ChatFormatting.RED));
+        if (armorXButton != null) armorXButton.setMessage(Component.literal("X " + Config.armorHudX + " −"));
+        if (armorYButton != null) armorYButton.setMessage(Component.literal("Y " + Config.armorHudY + " −"));
     }
 
     @Override
