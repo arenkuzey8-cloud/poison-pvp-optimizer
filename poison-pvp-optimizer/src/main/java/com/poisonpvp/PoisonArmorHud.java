@@ -9,6 +9,11 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 public final class PoisonArmorHud {
+    private static final EquipmentSlot[] SLOTS = {
+        EquipmentSlot.HEAD, EquipmentSlot.CHEST,
+        EquipmentSlot.LEGS, EquipmentSlot.FEET
+    };
+
     private PoisonArmorHud() {}
 
     public static void register() {
@@ -22,44 +27,51 @@ public final class PoisonArmorHud {
         Minecraft mc = Minecraft.getInstance();
         if (!Config.armorHudEnabled || mc.player == null || mc.gui.hud.isHidden()) return;
 
-        EquipmentSlot[] slots = {
-            EquipmentSlot.HEAD, EquipmentSlot.CHEST,
-            EquipmentSlot.LEGS, EquipmentSlot.FEET,
-            EquipmentSlot.OFFHAND
-        };
-        String[] labels = {"KASK", "GÖĞÜSLÜK", "PANTOLON", "BOT", "EL"};
         int x = Config.armorHudX;
         int y = Config.armorHudY;
-        int width = 126;
-        int rowHeight = 18;
-        int height = 19 + rowHeight * slots.length;
+        int slotSize = 34;
+        int gap = 3;
+        int padding = 4;
+        int width = padding * 2 + SLOTS.length * slotSize + (SLOTS.length - 1) * gap;
+        int height = 43;
 
-        graphics.fill(x, y, x + width, y + height, 0xA8202028);
-        graphics.fill(x, y, x + width, y + 2, 0xFFB46BFF);
-        graphics.text(mc.font, "POISON  ARMOR", x + 6, y + 5, 0xFFE4C8FF, true);
+        // Dark outer frame and inset slot backgrounds, matching the compact
+        // four-piece armor strip shown in the reference image.
+        graphics.fill(x, y, x + width, y + height, 0xE0101010);
+        graphics.fill(x + 2, y + 2, x + width - 2, y + height - 2, 0xFF777777);
+        graphics.fill(x + 4, y + 4, x + width - 4, y + height - 4, 0xFF292929);
 
-        for (int i = 0; i < slots.length; i++) {
-            ItemStack stack = mc.player.getItemBySlot(slots[i]);
-            String value = stack.isEmpty() ? "--" : durabilityText(stack);
-            int color = stack.isEmpty() ? 0xFF888888 : durabilityColor(stack);
-            int rowY = y + 19 + i * rowHeight;
-            graphics.text(mc.font, labels[i], x + 6, rowY, 0xFFE6E6E6, true);
-            graphics.text(mc.font, value, x + width - mc.font.width(value) - 6, rowY, color, true);
+        for (int i = 0; i < SLOTS.length; i++) {
+            int slotX = x + padding + i * (slotSize + gap);
+            int slotY = y + 4;
+            ItemStack stack = mc.player.getItemBySlot(SLOTS[i]);
+
+            graphics.fill(slotX, slotY, slotX + slotSize, slotY + slotSize, 0xFF111111);
+            graphics.fill(slotX + 1, slotY + 1, slotX + slotSize - 1, slotY + slotSize - 1, 0xFF353535);
+            graphics.fill(slotX + 3, slotY + 3, slotX + slotSize - 3, slotY + slotSize - 3, 0xFF202020);
+
+            if (!stack.isEmpty()) {
+                int itemX = slotX + (slotSize - 16) / 2;
+                int itemY = slotY + 4;
+                graphics.renderItem(stack, itemX, itemY);
+
+                if (stack.isDamageableItem()) {
+                    int barX = slotX + 4;
+                    int barY = slotY + slotSize - 7;
+                    int barWidth = slotSize - 8;
+                    float remaining = Math.max(0, stack.getMaxDamage() - stack.getDamageValue())
+                        / (float) stack.getMaxDamage();
+                    graphics.fill(barX, barY, barX + barWidth, barY + 3, 0xFF080808);
+                    graphics.fill(barX, barY, barX + Math.round(barWidth * remaining), barY + 3,
+                        durabilityColor(remaining));
+                }
+            }
         }
     }
 
-    private static String durabilityText(ItemStack stack) {
-        if (!stack.isDamageableItem()) return "VAR";
-        int max = stack.getMaxDamage();
-        int remaining = Math.max(0, max - stack.getDamageValue());
-        return Math.round(remaining * 100.0f / max) + "%";
-    }
-
-    private static int durabilityColor(ItemStack stack) {
-        if (!stack.isDamageableItem()) return 0xFF75D99A;
-        float ratio = (stack.getMaxDamage() - stack.getDamageValue()) / (float) stack.getMaxDamage();
-        if (ratio <= 0.20f) return 0xFFFF5555;
-        if (ratio <= 0.50f) return 0xFFFFC45C;
-        return 0xFF75D99A;
+    private static int durabilityColor(float remaining) {
+        if (remaining <= 0.20f) return 0xFFFF3333;
+        if (remaining <= 0.50f) return 0xFFFFC52E;
+        return 0xFF35D05B;
     }
 }
