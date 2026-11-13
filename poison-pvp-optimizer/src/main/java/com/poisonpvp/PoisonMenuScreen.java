@@ -6,10 +6,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.LinkedHashMap;
@@ -17,9 +17,11 @@ import java.util.Map;
 
 public class PoisonMenuScreen extends Screen {
 
-    private static final int PANEL_WIDTH = 460;
-    private static final int PANEL_COLOR = 0xE6101420;
-    private static final int ACCENT_COLOR = 0xFFB56CFF;
+    private static final int PANEL_WIDTH = 540;
+    private static final int PANEL_COLOR = 0xF0121724;
+    private static final int PANEL_INNER = 0xFF171F30;
+    private static final int ACCENT = 0xFFB56CFF;
+    private static final int MUTED = 0xFF9AA7BD;
 
     private boolean binding;
     private Button zoomButton;
@@ -30,6 +32,7 @@ public class PoisonMenuScreen extends Screen {
     private int panelTop;
     private int panelLeft;
     private int panelBottom;
+    private int panelWidth;
 
     public PoisonMenuScreen() {
         super(Component.literal("Poison PvP"));
@@ -40,73 +43,75 @@ public class PoisonMenuScreen extends Screen {
         clearWidgets();
         moduleButtons.clear();
 
-        int panelWidth = Math.min(PANEL_WIDTH, this.width - 20);
+        panelWidth = Math.min(PANEL_WIDTH, this.width - 24);
         int left = (this.width - panelWidth) / 2;
-        int innerWidth = panelWidth - 24;
-        int columns = panelWidth < 390 ? 3 : 4;
-        int gap = 6;
+        int innerWidth = panelWidth - 32;
+        int columns = innerWidth >= 470 ? 4 : 3;
+        int gap = 7;
         int cellWidth = (innerWidth - (columns - 1) * gap) / columns;
         int rows = (Modules.ALL.size() + columns - 1) / columns;
 
-        int contentHeight = 24 + 28 + 19 + 26 + 24 + 29 + 24 + 30 + 20 + 25
-            + rows * 25 + 7 + 20 + 27 + 22;
-        int y = Math.max(8, (this.height - contentHeight) / 2);
-        panelTop = y - 8;
+        int contentHeight = 28 + 25 + 10 + 25 + 8 + 26 + 9 + 20 + 8
+            + rows * 27 + 10 + 21 + 10 + 24;
+        int y = Math.max(10, (this.height - contentHeight) / 2);
+        panelTop = y - 12;
         panelLeft = left;
-        panelBottom = y + contentHeight + 8;
+        panelBottom = y + contentHeight + 12;
 
         Button title = Button.builder(
-            Component.literal("POISON PVP").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
-            b -> {}).bounds(left + 12, y, innerWidth, 24).build();
+            Component.literal("POISON").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD)
+                .append(Component.literal("  PVP").withStyle(ChatFormatting.WHITE, ChatFormatting.BOLD)),
+            b -> {}).bounds(left + 16, y, innerWidth, 28).build();
         title.active = false;
         addRenderableWidget(title);
 
-        y += 28;
+        y += 33;
         Button subtitle = Button.builder(
-            Component.literal("GÖRSEL AYARLAR  •  FPS PROFİLLERİ").withStyle(ChatFormatting.GRAY),
-            b -> {}).bounds(left + 12, y, innerWidth, 19).build();
+            Component.literal("PERFORMANS MERKEZİ  /  İSTEMCİ TARAFI AYARLAR")
+                .withStyle(ChatFormatting.GRAY),
+            b -> {}).bounds(left + 16, y, innerWidth, 21).build();
         subtitle.active = false;
         addRenderableWidget(subtitle);
 
-        y += 26;
-        int actionGap = 6;
+        y += 31;
+        int actionGap = 7;
         int actionWidth = (innerWidth - actionGap * 3) / 4;
         profileButton = addRenderableWidget(Button.builder(Component.empty(), b -> {
             selectedProfile = (selectedProfile + 1) % Modules.PVP_PROFILES.size();
             refresh();
-        }).bounds(left + 12, y, actionWidth, 24).build());
+        }).bounds(left + 16, y, actionWidth, 25).build());
 
-        addRenderableWidget(Button.builder(Component.literal("Profili Uygula"), b -> {
+        addRenderableWidget(Button.builder(Component.literal("Uygula"), b -> {
             Modules.applyPreset(Modules.profilePreset(Modules.PVP_PROFILES.get(selectedProfile)));
             refresh();
-        }).bounds(left + 12 + actionWidth + actionGap, y, actionWidth, 24).build());
+        }).bounds(left + 16 + actionWidth + actionGap, y, actionWidth, 25).build());
 
         addRenderableWidget(Button.builder(Component.literal("Maks FPS"), b -> {
             Modules.applyPreset(Modules.PRESET_MAX_FPS);
             refresh();
-        }).bounds(left + 12 + (actionWidth + actionGap) * 2, y, actionWidth, 24).build());
+        }).bounds(left + 16 + (actionWidth + actionGap) * 2, y, actionWidth, 25).build());
 
-        addRenderableWidget(Button.builder(Component.literal("Hepsini Kapat"), b -> {
+        addRenderableWidget(Button.builder(Component.literal("Tümünü Kapat"), b -> {
             Modules.applyPreset(java.util.Set.of());
             refresh();
-        }).bounds(left + 12 + (actionWidth + actionGap) * 3, y, actionWidth, 24).build());
+        }).bounds(left + 16 + (actionWidth + actionGap) * 3, y, actionWidth, 25).build());
 
-        y += 29;
+        y += 34;
         zoomButton = addRenderableWidget(Button.builder(Component.empty(), b -> {
             binding = true;
             refresh();
-        }).bounds(left + 12, y, innerWidth - 116, 24).build());
+        }).bounds(left + 16, y, innerWidth - 132, 26).build());
 
         fovButton = addRenderableWidget(Button.builder(Component.empty(), b -> {
             Config.zoomFov = Config.zoomFov >= 110 ? 30 : Math.min(110, Config.zoomFov + 10);
             Config.save();
             refresh();
-        }).bounds(left + 12 + innerWidth - 110, y, 110, 24).build());
+        }).bounds(left + 16 + innerWidth - 125, y, 125, 26).build());
 
-        y += 30;
+        y += 35;
         Button section = Button.builder(
-            Component.literal("PERFORMANS ANAHTARLARI").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
-            b -> {}).bounds(left + 12, y, innerWidth, 20).build();
+            Component.literal("GÖRÜNTÜ VE FPS ANAHTARLARI").withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD),
+            b -> {}).bounds(left + 16, y, innerWidth, 20).build();
         section.active = false;
         addRenderableWidget(section);
 
@@ -115,40 +120,48 @@ public class PoisonMenuScreen extends Screen {
             Module module = Modules.ALL.get(i);
             int col = i % columns;
             int row = i / columns;
-            int x = left + 12 + col * (cellWidth + gap);
+            int x = left + 16 + col * (cellWidth + gap);
             Button btn = Button.builder(Component.empty(), b -> {
                 module.setEnabled(!module.isEnabled());
                 refresh();
-            }).bounds(x, y + row * 25, cellWidth, 22).build();
+            }).bounds(x, y + row * 27, cellWidth, 24).build();
             moduleButtons.put(module, addRenderableWidget(btn));
         }
 
-        y += rows * 25 + 7;
+        y += rows * 27 + 10;
         boolean c2meLoaded = FabricLoader.getInstance().isModLoaded("c2me");
-        Button c2meStatus = addRenderableWidget(Button.builder(
+        Button status = addRenderableWidget(Button.builder(
             Component.literal(c2meLoaded
-                ? "C2ME aktif  •  Chunk yükleme optimizasyonu"
-                : "C2ME yok  •  İsteğe bağlı mod").withStyle(ChatFormatting.GRAY),
-            b -> {}).bounds(left + 12, y, innerWidth, 20).build());
-        c2meStatus.active = false;
+                ? "● C2ME ALGILANDI  ·  Chunk yükleme iyileştirmesi"
+                : "○ C2ME YÜKLÜ DEĞİL  ·  İsteğe bağlı").withStyle(ChatFormatting.GRAY),
+            b -> {}).bounds(left + 16, y, innerWidth, 21).build());
+        status.active = false;
 
-        y += 27;
-        addRenderableWidget(Button.builder(Component.literal("Kapat"), b -> onClose())
-            .bounds(left + panelWidth / 2 - 55, y, 110, 22).build());
+        y += 31;
+        addRenderableWidget(Button.builder(Component.literal("MENÜYÜ KAPAT"), b -> onClose())
+            .bounds(left + panelWidth / 2 - 66, y, 132, 24).build());
 
         refresh();
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        graphics.fill(panelLeft, panelTop, panelLeft + Math.min(PANEL_WIDTH, this.width - 20),
-            panelBottom, PANEL_COLOR);
-        graphics.fill(panelLeft, panelTop, panelLeft + Math.min(PANEL_WIDTH, this.width - 20),
-            panelTop + 2, ACCENT_COLOR);
+        graphics.fill(0, 0, this.width, this.height, 0x99070A12);
+        graphics.fill(panelLeft, panelTop, panelLeft + panelWidth, panelBottom, PANEL_COLOR);
+        graphics.fill(panelLeft, panelTop, panelLeft + panelWidth, panelTop + 3, ACCENT);
+        graphics.fill(panelLeft + 1, panelTop + 3, panelLeft + panelWidth - 1,
+            panelBottom - 1, PANEL_INNER);
+        graphics.fill(panelLeft + 16, panelTop + 43, panelLeft + panelWidth - 16,
+            panelTop + 44, 0xFF30394D);
         super.render(graphics, mouseX, mouseY, partialTick);
+
         if (profileButton != null) {
-            graphics.renderItem(profileIcon(), profileButton.getX() + 5, profileButton.getY() + 4);
+            graphics.renderItem(profileIcon(), profileButton.getX() + 7, profileButton.getY() + 4);
         }
+        graphics.drawString(this.font, "POISON PVP  •  CLIENT SETTINGS",
+            panelLeft + 18, panelTop + 9, 0xFFE8D9FF, false);
+        graphics.drawString(this.font, "PROFİL", panelLeft + 18, panelTop + 68, MUTED, false);
+        graphics.drawString(this.font, "AYARLAR", panelLeft + 18, panelTop + 164, MUTED, false);
     }
 
     private ItemStack profileIcon() {
@@ -173,18 +186,22 @@ public class PoisonMenuScreen extends Screen {
             .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
         for (Map.Entry<Module, Button> entry : moduleButtons.entrySet()) {
             Module module = entry.getKey();
-            entry.getValue().setMessage(Component.literal(module.label)
-                .withStyle(module.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.WHITE));
+            Component state = Component.literal(module.isEnabled() ? "✓ " : "○ ")
+                .withStyle(module.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.DARK_GRAY);
+            entry.getValue().setMessage(state.append(Component.literal(module.label)
+                .withStyle(module.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.WHITE)));
         }
         if (binding) {
-            zoomButton.setMessage(Component.literal("Tuşa bas... (ESC iptal, DEL sil)")
+            zoomButton.setMessage(Component.literal("Bir tuşa bas...  (ESC iptal / DEL sil)")
                 .withStyle(ChatFormatting.YELLOW));
         } else {
-            zoomButton.setMessage(Component.literal("Zoom: ")
+            zoomButton.setMessage(Component.literal("ZOOM  ·  ")
+                .withStyle(ChatFormatting.GRAY)
                 .append(PoisonPvpClient.ZOOM_KEY.getTranslatedKeyMessage())
-                .append(Component.literal("  •  Değiştir")));
+                .append(Component.literal("  ·  Değiştir")));
         }
-        fovButton.setMessage(Component.literal("Zoom FOV: " + Config.zoomFov));
+        fovButton.setMessage(Component.literal("FOV  " + Config.zoomFov)
+            .withStyle(ChatFormatting.LIGHT_PURPLE));
     }
 
     @Override
