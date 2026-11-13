@@ -15,6 +15,9 @@ public final class Config {
     private Config() {}
 
     public static int zoomFov = 30;
+    public static boolean armorHudEnabled = true;
+    public static int armorHudX = 8;
+    public static int armorHudY = 8;
     private static final Set<String> savedEnabled = new HashSet<>();
 
     private static Path file() {
@@ -33,6 +36,9 @@ public final class Config {
         try {
             zoomFov = Math.max(30, Math.min(110, Integer.parseInt(p.getProperty("zoomFov", "30"))));
         } catch (NumberFormatException ignored) {}
+        armorHudEnabled = Boolean.parseBoolean(p.getProperty("armorHudEnabled", "true"));
+        try { armorHudX = Math.max(0, Math.min(2000, Integer.parseInt(p.getProperty("armorHudX", "8")))); } catch (NumberFormatException ignored) {}
+        try { armorHudY = Math.max(0, Math.min(2000, Integer.parseInt(p.getProperty("armorHudY", "8")))); } catch (NumberFormatException ignored) {}
         for (String k : p.stringPropertyNames()) {
             if (k.startsWith("module.") && Boolean.parseBoolean(p.getProperty(k))) {
                 savedEnabled.add(k.substring("module.".length()));
@@ -47,6 +53,9 @@ public final class Config {
     public static void save() {
         Properties p = new Properties();
         p.setProperty("zoomFov", Integer.toString(zoomFov));
+        p.setProperty("armorHudEnabled", Boolean.toString(armorHudEnabled));
+        p.setProperty("armorHudX", Integer.toString(armorHudX));
+        p.setProperty("armorHudY", Integer.toString(armorHudY));
         for (Module m : Modules.ALL) p.setProperty("module." + m.id, Boolean.toString(m.isEnabled()));
         try (Writer w = Files.newBufferedWriter(file())) {
             p.store(w, "Poison PVP Optimizer");
