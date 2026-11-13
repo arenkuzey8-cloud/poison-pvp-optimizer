@@ -52,25 +52,9 @@ public final class Modules {
             (o, u) -> Module.set(u, o.screenEffectScale(), 0.0D)),
         new Module("autosave", "Autosave Göstergesini Kapat",
             (o, u) -> Module.set(u, o.showAutosaveIndicator(), false)),
-        // Safe Crystal-only visual/performance bundle inspired by the uploaded mod's context.
-        // It does not import its crystal attack, placement, timing, or entity-manipulation logic.
-        new Module("crystalvisual", "Crystal Görsel FPS Paketi",
-            (o, u) -> {
-                Module.set(u, o.particles(), ParticleStatus.MINIMAL);
-                Module.set(u, o.entityShadows(), false);
-                Module.set(u, o.renderDistance(), 6);
-                Module.set(u, o.simulationDistance(), 4);
-                Module.set(u, o.entityDistanceScaling(), 0.50D);
-                Module.set(u, o.biomeBlendRadius(), 0);
-                Module.set(u, o.cloudStatus(), CloudStatus.OFF);
-                Module.set(u, o.graphicsPreset(), GraphicsPreset.FAST);
-                Module.set(u, o.mipmapLevels(), 0);
-                Module.set(u, o.screenEffectScale(), 0.0D);
-                Module.set(u, o.fovEffectScale(), 0.0D);
-                Module.set(u, o.damageTiltStrength(), 0.0D);
-                Module.set(u, o.bobView(), false);
-                Module.set(u, o.enableVsync(), false);
-            })
+        // A separate Crystal-only visual toggle; does not alter combat or entity behavior.
+        new Module("crystalvisual", "Crystal Görsel Parlaklık",
+            (o, u) -> Module.set(u, o.gamma(), 1.0D))
     );
 
     // Distinct mode presets. Differences are visual/performance settings only.
