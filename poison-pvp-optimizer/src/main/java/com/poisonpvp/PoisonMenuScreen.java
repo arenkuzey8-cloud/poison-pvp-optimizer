@@ -34,6 +34,8 @@ public class PoisonMenuScreen extends Screen {
     private Button armorHudButton;
     private Button armorXButton;
     private Button armorYButton;
+    private Button armorScaleDownButton;
+    private Button armorScaleUpButton;
     private Button sectionButton;
     private final Button[] tabButtons = new Button[3];
     private final Map<Module, Button> moduleButtons = new LinkedHashMap<>();
@@ -143,7 +145,7 @@ public class PoisonMenuScreen extends Screen {
         }).bounds(mainX + mainWidth - 88, bottomY, 88, 21).build());
 
         int hudGap = 4;
-        int hudCell = (mainWidth - hudGap * 4) / 5;
+        int hudCell = (mainWidth - hudGap * 6) / 7;
         armorHudButton = addRenderableWidget(Button.builder(Component.empty(), b -> {
             Config.armorHudEnabled = !Config.armorHudEnabled;
             Config.save();
@@ -236,6 +238,8 @@ public class PoisonMenuScreen extends Screen {
             .withStyle(Config.armorHudEnabled ? ChatFormatting.GREEN : ChatFormatting.RED));
         if (armorXButton != null) armorXButton.setMessage(Component.literal("X " + Config.armorHudX + " −"));
         if (armorYButton != null) armorYButton.setMessage(Component.literal("Y " + Config.armorHudY + " −"));
+        if (armorScaleDownButton != null) armorScaleDownButton.setMessage(Component.literal("BOYUT −"));
+        if (armorScaleUpButton != null) armorScaleUpButton.setMessage(Component.literal("BOYUT +"));
     }
 
     @Override
