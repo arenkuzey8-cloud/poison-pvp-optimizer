@@ -53,7 +53,7 @@ public final class PoisonArmorHud {
             if (!stack.isEmpty()) {
                 int itemX = slotX + (slotSize - 16) / 2;
                 int itemY = slotY + 4;
-                graphics.renderItem(stack, itemX, itemY);
+                graphics.item(stack, itemX, itemY);
 
                 if (stack.isDamageableItem()) {
                     int barX = slotX + 4;
