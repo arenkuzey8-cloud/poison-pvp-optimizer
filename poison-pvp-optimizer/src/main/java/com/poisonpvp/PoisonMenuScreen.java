@@ -6,6 +6,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -144,11 +146,31 @@ public class PoisonMenuScreen extends Screen {
         graphics.fill(panelLeft, panelTop, panelLeft + Math.min(PANEL_WIDTH, this.width - 20),
             panelTop + 2, ACCENT_COLOR);
         super.render(graphics, mouseX, mouseY, partialTick);
+        if (profileButton != null) {
+            graphics.renderItem(profileIcon(), profileButton.getX() + 5, profileButton.getY() + 4);
+        }
+    }
+
+    private ItemStack profileIcon() {
+        return switch (selectedProfile) {
+            case 0 -> new ItemStack(Items.DIAMOND_SWORD);
+            case 1 -> new ItemStack(Items.DIAMOND_AXE);
+            case 2 -> new ItemStack(Items.MACE);
+            case 3 -> new ItemStack(Items.TRIDENT);
+            case 4 -> new ItemStack(Items.GOLDEN_APPLE);
+            case 5 -> new ItemStack(Items.NETHERITE_HELMET);
+            case 6 -> new ItemStack(Items.SPLASH_POTION);
+            case 7 -> new ItemStack(Items.ENDER_PEARL);
+            case 8 -> new ItemStack(Items.DIAMOND_CHESTPLATE);
+            case 9 -> new ItemStack(Items.END_CRYSTAL);
+            case 10 -> new ItemStack(Items.TNT_MINECART);
+            default -> ItemStack.EMPTY;
+        };
     }
 
     private void refresh() {
-        profileButton.setMessage(Component.literal("Mod: " + Modules.PVP_PROFILES.get(selectedProfile))
-            .withStyle(ChatFormatting.LIGHT_PURPLE));
+        profileButton.setMessage(Component.literal(Modules.PVP_PROFILES.get(selectedProfile))
+            .withStyle(ChatFormatting.LIGHT_PURPLE, ChatFormatting.BOLD));
         for (Map.Entry<Module, Button> entry : moduleButtons.entrySet()) {
             Module module = entry.getKey();
             entry.getValue().setMessage(Component.literal(module.label)
