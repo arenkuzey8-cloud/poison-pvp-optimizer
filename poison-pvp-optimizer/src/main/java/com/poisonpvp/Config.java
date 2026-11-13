@@ -18,6 +18,7 @@ public final class Config {
     public static boolean armorHudEnabled = true;
     public static int armorHudX = 8;
     public static int armorHudY = 8;
+    public static int armorHudScale = 100;
     private static final Set<String> savedEnabled = new HashSet<>();
 
     private static Path file() {
@@ -39,6 +40,7 @@ public final class Config {
         armorHudEnabled = Boolean.parseBoolean(p.getProperty("armorHudEnabled", "true"));
         try { armorHudX = Math.max(0, Math.min(2000, Integer.parseInt(p.getProperty("armorHudX", "8")))); } catch (NumberFormatException ignored) {}
         try { armorHudY = Math.max(0, Math.min(2000, Integer.parseInt(p.getProperty("armorHudY", "8")))); } catch (NumberFormatException ignored) {}
+        try { armorHudScale = Math.max(70, Math.min(160, Integer.parseInt(p.getProperty("armorHudScale", "100")))); } catch (NumberFormatException ignored) {}
         for (String k : p.stringPropertyNames()) {
             if (k.startsWith("module.") && Boolean.parseBoolean(p.getProperty(k))) {
                 savedEnabled.add(k.substring("module.".length()));
@@ -56,6 +58,7 @@ public final class Config {
         p.setProperty("armorHudEnabled", Boolean.toString(armorHudEnabled));
         p.setProperty("armorHudX", Integer.toString(armorHudX));
         p.setProperty("armorHudY", Integer.toString(armorHudY));
+        p.setProperty("armorHudScale", Integer.toString(armorHudScale));
         for (Module m : Modules.ALL) p.setProperty("module." + m.id, Boolean.toString(m.isEnabled()));
         try (Writer w = Files.newBufferedWriter(file())) {
             p.store(w, "Poison PVP Optimizer");
