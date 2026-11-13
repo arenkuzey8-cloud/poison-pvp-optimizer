@@ -110,7 +110,7 @@ public class PoisonMenuScreen extends Screen {
         sectionButton.active = false;
 
         mainY += 24;
-        int columns = 2;
+        int columns = 3;
         int cellWidth = (mainWidth - GAP) / columns;
         int availableForModules = Math.max(88, height - (mainY - top) - 104);
         int rowHeight = Math.max(19, Math.min(23, availableForModules / 9));
