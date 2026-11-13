@@ -23,6 +23,7 @@ public class PoisonPvpClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         Config.load();
+        PoisonArmorHud.register();
 
         KeyMapping.Category category = KeyMapping.Category.register(
             Identifier.fromNamespaceAndPath(MOD_ID, "main"));
