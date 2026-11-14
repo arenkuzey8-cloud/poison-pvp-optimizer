@@ -2,6 +2,10 @@ name: build
 on:
   push:
   workflow_dispatch:
+permissions:
+  contents: read
+  id-token: write
+  attestations: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,8 +21,20 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 9.5.1
-      - run: gradle build
+      - run: gradle --no-daemon clean build
+      - name: Create SHA-256 checksum
+        shell: bash
+        run: |
+          cd build/libs
+          sha256sum *.jar > SHA256SUMS.txt
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-path: poison-pvp-optimizer/build/libs/*.jar
       - uses: actions/upload-artifact@v4
         with:
-          name: poison-pvp-optimizer-jar
-          path: poison-pvp-optimizer/build/libs/*.jar
+          name: poison-pvp-optimizer-verified-build
+          path: |
+            poison-pvp-optimizer/build/libs/*.jar
+            poison-pvp-optimizer/build/libs/SHA256SUMS.txt
+          if-no-files-found: error
